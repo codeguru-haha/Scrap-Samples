@@ -1,4 +1,4 @@
-years = list(range(1991,2022)) # defining the years we want to scrape data for
+years = list(range(1991,2021)) # defining the years we want to scrape data for
 
 url_start = "https://www.basketball-reference.com/awards/awards_{}.html"
 
@@ -30,7 +30,7 @@ mvp_1991.head()
 dfs = []
 
 for year in years:
-    with open("mvp/{}.html".format(year)) as f:
+    with open("mvp/{}.html".format(year), encoding="utf-8") as f:
         page = f.read()
     soup = BeautifulSoup(page, "html.parser")
     
@@ -39,7 +39,10 @@ for year in years:
         over_header.decompose()  # Call decompose() only if the element is found
     
     mvp_table = soup.find(id="mvp")
-    mvp_data = pd.read_html(str(mvp_table))[0]
+    mvp_data = pd.read_html(str(mvp_table))
     
-    mvp_data["Year"] = year  # Add the "Year" column to the DataFrame
-    dfs.append(mvp_data)
+    mvp_data[0]["Year"] = year
+    dfs.append(mvp_data[0])
+
+for df in dfs:
+    print(df)
